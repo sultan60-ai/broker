@@ -1,0 +1,3 @@
+de\sz\gateway\ApiGatewayApplication.class
+de\sz\gateway\filter\CorrelationIdFilter.class
+de\sz\gateway\config\SecurityConfig.class

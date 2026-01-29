@@ -1,0 +1,43 @@
+server:
+  port: 8081
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+
+spring.security.oauth2.resourceserver.jwt:
+  jwk-set-uri: http://localhost:9999/does-not-exist
+
+app:
+  security:
+    disableAuth: false
+  downstream:
+    accountsBaseUrl: http://localhost:8082
+    tradingBaseUrl: http://localhost:8084
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: accounts-service
+          uri: ${app.downstream.accountsBaseUrl}
+          predicates:
+            - Path=/accounts/**
+          filters:
+            - RewritePath=/accounts/(?<segment>.*), /v1/${segment}
+
+        - id: trading-service
+          uri: ${app.downstream.tradingBaseUrl}
+          predicates:
+            - Path=/trading/**
+          filters:
+            - RewritePath=/trading/(?<segment>.*), /v1/${segment}
+
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"

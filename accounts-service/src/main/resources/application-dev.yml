@@ -1,0 +1,6 @@
+app:
+  security:
+    disableAuth: true
+  outbox:
+    publisher:
+      enabled: false

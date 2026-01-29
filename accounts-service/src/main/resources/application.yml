@@ -1,0 +1,44 @@
+server:
+  port: 8080
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+  datasource:
+    url: jdbc:h2:mem:accountsdb;DB_CLOSE_DELAY=-1
+    driverClassName: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+  h2:
+    console:
+      enabled: true
+      path: /h2
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+
+# PROD default: configure issuer-uri or jwk-set-uri properly
+spring.security.oauth2.resourceserver.jwt:
+  jwk-set-uri: http://localhost:9999/does-not-exist
+
+app:
+  outbox:
+    publisher:
+      enabled: false # set true to publish to Kafka
+      fixedDelayMs: 2000
+      batchSize: 50
+    kafka:
+      topic: bank.events.accounts
+  security:
+    disableAuth: false
+  etag:
+    enabled: true
