@@ -3,4 +3,6 @@ app:
     disableAuth: true
   outbox:
     publisher:
-      enabled: false
+      enabled: false 
+server:
+  port: 8083
