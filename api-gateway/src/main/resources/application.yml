@@ -14,26 +14,37 @@ app:
   security:
     disableAuth: false
   downstream:
-    accountsBaseUrl: http://localhost:8082
-    tradingBaseUrl: http://localhost:8084
+    accountsBaseUrl: https://accounts-service-whreljigvq-ey.a.run.app
+    tradingBaseUrl: https://trading-service-whreljigvq-ey.a.run.app
 
 spring:
   cloud:
     gateway:
       routes:
+        - id: root
+          uri: no://op
+          predicates:
+            - Path=/
+          filters:
+            - RedirectTo=302,/actuator/health
         - id: accounts-service
           uri: ${app.downstream.accountsBaseUrl}
           predicates:
             - Path=/accounts/**
           filters:
-            - RewritePath=/accounts/(?<segment>.*), /v1/${segment}
-
+            - RewritePath=/accounts/(?<segment>.*),/v1/${segment}
+        - id: trading-actuator
+          uri: ${app.downstream.tradingBaseUrl}
+          predicates:
+            - Path=/trading/actuator/**
+          filters:
+            - RewritePath=/trading/(?<segment>.*),/${segment}
         - id: trading-service
           uri: ${app.downstream.tradingBaseUrl}
           predicates:
             - Path=/trading/**
           filters:
-            - RewritePath=/trading/(?<segment>.*), /v1/${segment}
+            - RewritePath=/trading/(?<segment>.*),/v1/${segment}
 
       globalcors:
         corsConfigurations:
