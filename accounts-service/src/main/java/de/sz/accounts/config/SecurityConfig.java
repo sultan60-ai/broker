@@ -12,7 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
   @Value("${app.security.disableAuth:false}")
-  private boolean disableAuth;
+  boolean disableAuth;
 
   @Bean
   SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -25,6 +25,7 @@ public class SecurityConfig {
     }
 
     http.authorizeHttpRequests(auth -> auth
+    	.requestMatchers("/health", "/test/**").permitAll()
         .requestMatchers("/actuator/health", "/actuator/info").permitAll()
         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
         .requestMatchers("/h2/**").permitAll()
