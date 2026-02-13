@@ -27,6 +27,12 @@ spring:
             - Path=/
           filters:
             - RedirectTo=302,/actuator/health
+        - id: accounts-actuator
+          uri: ${app.downstream.accountsBaseUrl}
+          predicates:
+            - Path=/accounts/actuator/**
+          filters:
+            - RewritePath=/accounts/(?<segment>.*),/${segment}
         - id: accounts-service
           uri: ${app.downstream.accountsBaseUrl}
           predicates:
